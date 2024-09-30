@@ -16,26 +16,13 @@ const CreateAppolo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
             }
         }
     }
-    module.forEach(item => {
-        if (item.type) {
-            init.types += item.type;
-        }
-        if (item.query) {
-            init.queries += item.query;
-        }
-        if (item.mutation) {
-            init.mutations += item.mutation;
-        }
-        if (Object.keys(item.resolvers.Query).length) {
-            for (const key in item.resolvers.Query) {
-                init.resolvers.Query[key] = item.resolvers.Query[key];
-            }
-        }
-        if (Object.keys(item.resolvers.Mutation).length) {
-            for (const key in item.resolvers.Mutation) {
-                init.resolvers.Mutation[key] = item.resolvers.Mutation[key];
-            }
-        }
+    module.forEach(({ type, query, mutation, resolvers = {} }) => {
+        if (type) init.types += type;
+        if (query) init.queries += query;
+        if (mutation) init.mutations += mutation;
+
+        Object.assign(init.resolvers.Query, resolvers.Query || {});
+        Object.assign(init.resolvers.Mutation, resolvers.Mutation || {});
     });
     init.queries = `#graphql
         ${init.queries ? `
