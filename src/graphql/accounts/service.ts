@@ -2,7 +2,8 @@ import { GraphQLError } from "graphql";
 import bcrypt from 'bcrypt';
 import AccountModel from "@/models/account";
 import { DTO, Service } from "@/config/interface";
-import { AccountInput } from "./type";
+import { AccountInput, AuthenticatedInput } from "./type";
+import { token } from "@/utils";
 
 const accountService: Service = {
     Query: {
@@ -28,7 +29,25 @@ const accountService: Service = {
                 password: hashedPassword
             });
             return createdAccount.toObject();
-
+        },
+        authenticated: async (_, args: DTO<AuthenticatedInput>) => {
+            const crrAccount = await AccountModel.findOne({
+                '$or': [
+                    {
+                        email: args.payload.identifier.trim()
+                    },
+                    {
+                        phoneNumber: args.payload.identifier.trim()
+                    }
+                ]
+            });
+            if (!crrAccount) throw new GraphQLError('Email or Phone number or password is invalid!');
+            const checkPassword = bcrypt.compareSync(args.payload.password, crrAccount.password);
+            if (!checkPassword) throw new GraphQLError('Email or Phone number or password is invalid!');
+            const accessToken = token.generateToken({ email: crrAccount.email, accountId: crrAccount._id });
+            return {
+                accessToken
+            }
         }
     }
 }

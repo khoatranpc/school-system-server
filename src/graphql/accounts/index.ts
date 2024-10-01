@@ -12,11 +12,18 @@ const AccountModule: GraphQLModule = {
             createdAt: Float
             updatedAt: Float
         }
+        type Authenticated {
+            accessToken: String
+        }
         input AccountInput {
             _id: ID
             email: String
             phoneNumber: String
             password: String
+        }
+        input AuthenticatedInput {
+            identifier: String
+            password: String 
         }
     `,
     query: `#graphql
@@ -24,6 +31,7 @@ const AccountModule: GraphQLModule = {
     `,
     mutation: `#graphql
         createAccount(payload: AccountInput!): Account!
+        authenticated(payload: AuthenticatedInput!): Authenticated!
     `,
     resolvers: {
         Query: accountService.Query,
