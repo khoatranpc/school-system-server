@@ -1,5 +1,6 @@
 import { GraphQLModule } from "@/config/interface";
 import accountService from "./service";
+import { PathGraphQL } from "@/config";
 
 const AccountModule: GraphQLModule = {
     type: `#graphql
@@ -27,11 +28,11 @@ const AccountModule: GraphQLModule = {
         }
     `,
     query: `#graphql
-        accounts: [Account!]
+         ${PathGraphQL.accounts}: [Account!]
     `,
     mutation: `#graphql
-        createAccount(payload: AccountInput!): Account!
-        authenticated(payload: AuthenticatedInput!): Authenticated!
+         ${PathGraphQL.createAccount}(payload: AccountInput!): Account!
+         ${PathGraphQL.authenticated}(payload: AuthenticatedInput!): Authenticated!
     `,
     resolvers: {
         Query: accountService.Query,

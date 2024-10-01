@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+import { PathGraphQL } from '.';
 export interface Obj {
     [k: string]: any;
 }
@@ -13,14 +15,17 @@ export interface GraphQLModule {
 }
 
 export interface DTO<T> {
-    payload: T
+    payload: T;
 }
-
+export interface ContextService {
+    auth?: Obj | string;
+}
 export interface Service {
     Query: {
-        [k: string]: (parent?: any, args?: DTO<Obj>, context?: any, info?: any) => any;
+        [k in PathGraphQL]?: (parent?: any, args?: DTO<Obj>, context?: ContextService, info?: any) => any;
     },
     Mutation: {
-        [k: string]: (parent?: any, args?: DTO<Obj>, context?: any, info?: any) => any;
+        [k in PathGraphQL]?: (parent?: any, args?: DTO<Obj>, context?: ContextService, info?: any) => any;
     },
 }
+

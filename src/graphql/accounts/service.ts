@@ -4,16 +4,17 @@ import AccountModel from "@/models/account";
 import { DTO, Service } from "@/config/interface";
 import { AccountInput, AuthenticatedInput } from "./type";
 import { token } from "@/utils";
+import { PathGraphQL } from "@/config";
 
 const accountService: Service = {
     Query: {
-        accounts: async () => {
+        [PathGraphQL.accounts]: async () => {
             const accounts = await AccountModel.find();
             return accounts;
         },
     },
     Mutation: {
-        createAccount: async (_, args: DTO<AccountInput>) => {
+        [PathGraphQL.createAccount]: async (_, args: DTO<AccountInput>) => {
             const checkExistedEmail = await AccountModel.findOne({
                 email: args.payload.email
             });
@@ -30,7 +31,7 @@ const accountService: Service = {
             });
             return createdAccount.toObject();
         },
-        authenticated: async (_, args: DTO<AuthenticatedInput>) => {
+        [PathGraphQL.authenticated]: async (_, args: DTO<AuthenticatedInput>) => {
             const crrAccount = await AccountModel.findOne({
                 '$or': [
                     {
@@ -44,7 +45,7 @@ const accountService: Service = {
             if (!crrAccount) throw new GraphQLError('Email or Phone number or password is invalid!');
             const checkPassword = bcrypt.compareSync(args.payload.password, crrAccount.password);
             if (!checkPassword) throw new GraphQLError('Email or Phone number or password is invalid!');
-            const accessToken = token.generateToken({ email: crrAccount.email, accountId: crrAccount._id });
+            const accessToken = token.generateToken({ email: crrAccount.email, accountId: crrAccount._id, phoneNumber: crrAccount.phoneNumber });
             return {
                 accessToken
             }

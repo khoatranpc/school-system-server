@@ -1,6 +1,7 @@
+import { GraphQLModule, Obj } from "@/config/interface";
+import AccountModule from "@/graphql/accounts";
+import UserModule from "@/graphql/users";
 import { ApolloServerOptions } from "@apollo/server";
-import { GraphQLModule, Obj } from "../config/interface.js";
-import AccountModule from "../graphql/accounts/index.js";
 
 const CreateAppolo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
     const init: Obj = {
@@ -49,5 +50,5 @@ const CreateAppolo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
     return apolloOptions;
 }
 
-const InitApollo = CreateAppolo(AccountModule);
+const InitApollo = CreateAppolo(AccountModule, UserModule);
 export default InitApollo;
