@@ -1,3 +1,4 @@
+import { Role } from "@/config";
 
 export interface Account {
     _id: string;
@@ -5,6 +6,7 @@ export interface Account {
     phoneNumber: string;
     password: string;
     isDeleted: Boolean;
+    role: Role;
 }
 export interface AccountInput {
     _id?: string;

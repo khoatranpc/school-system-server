@@ -8,7 +8,7 @@ const UserModule: GraphQLModule = {
             _id: ID
             name: String
             email: String
-            phoneNumner: String
+            phoneNumber: String
             address: String
             identity: String
             dob: Float

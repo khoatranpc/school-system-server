@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
+import { DbCollections, Role } from "@/config";
 import { Account } from "@/graphql/accounts/type";
-import { DbCollections } from "@/config";
 
 const accountSchema = new mongoose.Schema<Account>({
     email: {
@@ -19,6 +19,11 @@ const accountSchema = new mongoose.Schema<Account>({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    role: {
+        type: String,
+        enum: Role,
+        default: Role.STUDENT
     }
 }, { timestamps: true });
 

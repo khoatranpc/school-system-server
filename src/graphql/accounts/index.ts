@@ -12,6 +12,7 @@ const AccountModule: GraphQLModule = {
             isDeleted: Boolean
             createdAt: Float
             updatedAt: Float
+            role: String
         }
         type Authenticated {
             accessToken: String

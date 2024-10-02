@@ -3,18 +3,18 @@ import bcrypt from 'bcrypt';
 import AccountModel from "@/models/account";
 import { DTO, Service } from "@/config/interface";
 import { AccountInput, AuthenticatedInput } from "./type";
-import { token } from "@/utils";
+import { createServiceGraphQL, token } from "@/utils";
 import { PathGraphQL } from "@/config";
 
 const accountService: Service = {
     Query: {
-        [PathGraphQL.accounts]: async () => {
+        [PathGraphQL.accounts]: createServiceGraphQL(async () => {
             const accounts = await AccountModel.find();
             return accounts;
-        },
+        }),
     },
     Mutation: {
-        [PathGraphQL.createAccount]: async (_, args: DTO<AccountInput>) => {
+        [PathGraphQL.createAccount]: createServiceGraphQL(async (_, args: DTO<AccountInput>) => {
             const checkExistedEmail = await AccountModel.findOne({
                 email: args.payload.email
             });
@@ -30,8 +30,8 @@ const accountService: Service = {
                 password: hashedPassword
             });
             return createdAccount.toObject();
-        },
-        [PathGraphQL.authenticated]: async (_, args: DTO<AuthenticatedInput>) => {
+        }),
+        [PathGraphQL.authenticated]: createServiceGraphQL(async (_, args: DTO<AuthenticatedInput>, __, info) => {
             const crrAccount = await AccountModel.findOne({
                 '$or': [
                     {
@@ -45,11 +45,11 @@ const accountService: Service = {
             if (!crrAccount) throw new GraphQLError('Email or Phone number or password is invalid!');
             const checkPassword = bcrypt.compareSync(args.payload.password, crrAccount.password);
             if (!checkPassword) throw new GraphQLError('Email or Phone number or password is invalid!');
-            const accessToken = token.generateToken({ email: crrAccount.email, accountId: crrAccount._id, phoneNumber: crrAccount.phoneNumber });
+            const accessToken = token.generateToken({ email: crrAccount.email, accountId: crrAccount._id, phoneNumber: crrAccount.phoneNumber, role: crrAccount.role });
             return {
                 accessToken
             }
-        }
+        })
     }
 }
 export default accountService;
