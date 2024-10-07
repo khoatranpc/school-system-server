@@ -3,7 +3,8 @@ import { PathDecentralization } from "./interface";
 export const DbCollections = {
     Accounts: 'accounts',
     Users: 'users',
-    Students: 'students'
+    Students: 'students',
+    SchoolYears: 'schoolyears'
 }
 
 export enum Role {
@@ -21,6 +22,7 @@ export enum PathGraphQL {
     getOneUserInfo = 'getOneUserInfo',
     students = 'students',
     createStudent = 'createStudent',
+    schoolYears = 'schoolYears'
 }
 
 export const decentralization: PathDecentralization = {
@@ -78,6 +80,15 @@ export const decentralization: PathDecentralization = {
         requiredAuth: true,
         rolePermissions: {
             ADMIN: ['All']
+        }
+    },
+    schoolYears: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All'],
+            STUDENT: ['Read'],
+            TEACHER: ['Read']
         }
     }
 }
