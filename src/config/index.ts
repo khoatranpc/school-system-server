@@ -22,7 +22,8 @@ export enum PathGraphQL {
     getOneUserInfo = 'getOneUserInfo',
     students = 'students',
     createStudent = 'createStudent',
-    schoolYears = 'schoolYears'
+    schoolYears = 'schoolYears',
+    createSchoolYear = 'createSchoolYear'
 }
 
 export const decentralization: PathDecentralization = {
@@ -89,6 +90,13 @@ export const decentralization: PathDecentralization = {
             ADMIN: ['All'],
             STUDENT: ['Read'],
             TEACHER: ['Read']
+        }
+    },
+    createSchoolYear: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All']
         }
     }
 }

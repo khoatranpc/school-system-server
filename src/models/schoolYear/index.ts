@@ -19,6 +19,11 @@ const schoolYearsSchema = new mongoose.Schema<SchoolYear>({
         type: String,
         enum: ['ACTIVE', 'FINISH'],
         default: 'ACTIVE'
+    },
+    name: {
+        type: String,
+        required: true,
+        unique: true,
     }
 }, { timestamps: true });
 

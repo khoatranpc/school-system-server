@@ -2,7 +2,7 @@ import { GraphQLError, GraphQLResolveInfo, SelectionNode, SelectionSetNode } fro
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { decentralization, PathGraphQL, Role } from '@/config';
-import { Action, ContextService, DTO, Obj } from '@/config/interface';
+import { Action, ContextService, DTO, FormatNameSchoolYear, Obj } from '@/config/interface';
 
 const token = {
     generateToken: (payload: { email: string, accountId: string, phoneNumber: string, role: Role }) => {
@@ -70,6 +70,9 @@ const getFieldsQuery = (info: GraphQLResolveInfo): string[] => {
 
     return getSelections(info.fieldNodes[0].selectionSet?.selections as unknown as SelectionSetNode[]);
 };
+function isFormatNameSchoolYear(value: string): value is FormatNameSchoolYear {
+    return /^\d{4,}-\d{4,}$/.test(value);
+}
 export {
     token,
     getScopeQuery,
@@ -77,5 +80,6 @@ export {
     createServiceGraphQL,
     checktIsTypeAction,
     duplicateData,
-    getFieldsQuery
+    getFieldsQuery,
+    isFormatNameSchoolYear
 }

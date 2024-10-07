@@ -1,11 +1,14 @@
 import { GraphQLModule } from "@/config/interface";
 import schoolYearService from "./service";
+import { PathGraphQL } from "@/config";
 
 const SchoolYearModule: GraphQLModule = {
     query: `#graphql
-        schoolYears: [SchoolYear]
+        ${PathGraphQL.schoolYears}(payload: SchoolYearFilter): [SchoolYear]
     `,
-    mutation: ``,
+    mutation: `#graphql
+        ${PathGraphQL.createSchoolYear}(payload: SchoolYearInput!): SchoolYear
+    `,
     type: `#graphql
         type SchoolYear {
             _id: ID
@@ -15,6 +18,16 @@ const SchoolYearModule: GraphQLModule = {
             status: String
             createdAt: Float
             updatedAt: Float
+            name: String
+        }
+        input SchoolYearFilter {
+            isDeleted: Boolean
+        }
+        input SchoolYearInput {
+            startDate: Float!
+            endDate: Float!
+            status: String
+            name: String!
         }
     `,
     resolvers: schoolYearService

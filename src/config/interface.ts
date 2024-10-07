@@ -43,3 +43,5 @@ export type PathDecentralization = {
         active: boolean;
     };
 };
+
+export type FormatNameSchoolYear = `${number}-${number}`;
