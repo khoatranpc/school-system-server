@@ -14,6 +14,7 @@ const StudentModule: GraphQLModule = {
             code: String
             isActive: Boolean
             isDeleted: Boolean
+            userId: User
         }
         input StudentInput {
             name: String !

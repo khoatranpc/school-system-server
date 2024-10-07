@@ -1,6 +1,10 @@
 import { ApolloServer } from '@apollo/server';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import express from 'express';
+import http from 'http';
+import cors from 'cors';
 import { GraphQLError } from 'graphql';
 dotenv.config();
 import { startStandaloneServer } from '@apollo/server/standalone';
@@ -14,7 +18,14 @@ const MONGODB_URL = process.env.MONGODB_URL as string;
 const PORT = Number(process.env.PORT) || 8000;
 
 await mongoose.connect(MONGODB_URL);
-const server = new ApolloServer(InitApollo);
+const app = express();
+app.use(cors());
+
+const httpServer = http.createServer(app);
+const server = new ApolloServer({
+    ...InitApollo,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+});
 const { url } = await startStandaloneServer(server, {
     listen: { port: PORT },
     context: async ({ req, res }: any) => {

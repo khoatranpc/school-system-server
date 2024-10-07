@@ -2,16 +2,17 @@ import StudentModel from "@/models/student";
 import bcrypt from 'bcrypt';
 import { PathGraphQL } from "@/config";
 import { DTO, Service } from "@/config/interface";
-import { createServiceGraphQL, duplicateData, generateUniqueNumericId } from "@/utils";
+import { createServiceGraphQL, duplicateData, generateUniqueNumericId, getFieldsQuery } from "@/utils";
 import { StudentInput } from "./type";
 import UserModel from "@/models/user";
 import AccountModel from "@/models/account";
 
 const studentService: Service = {
     Query: {
-        [PathGraphQL.students]: createServiceGraphQL(() => {
-            const randomNumber = generateUniqueNumericId();
-            console.log(randomNumber);
+        [PathGraphQL.students]: createServiceGraphQL(async (_, __, ___, info) => {
+            const fields = getFieldsQuery(info);
+            const students = await StudentModel.find({}, fields.join(' ')).populate(`${fields.includes('userId') ? 'userId' : ''}`);
+            return students;
         })
     },
     Mutation: {

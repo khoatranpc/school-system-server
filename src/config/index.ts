@@ -60,7 +60,11 @@ export const decentralization: PathDecentralization = {
     getOneUserInfo: {
         active: true,
         requiredAuth: true,
-        rolePermissions: {}
+        rolePermissions: {
+            ADMIN: ['All'],
+            STUDENT: ['Read'],
+            TEACHER: ['Read']
+        }
     },
     students: {
         active: true,

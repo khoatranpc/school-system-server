@@ -1,4 +1,4 @@
-import { GraphQLError } from 'graphql';
+import { GraphQLError, GraphQLResolveInfo, SelectionNode, SelectionSetNode } from 'graphql';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { decentralization, PathGraphQL, Role } from '@/config';
@@ -38,8 +38,8 @@ const generateUniqueNumericId = (length = 10) => {
     const numericId = parseInt(hash, 16).toString().slice(0, length);
     return numericId.padStart(length, '0');
 };
-const createServiceGraphQL = (callback: (parent: any, args: DTO<Obj>, context: ContextService, info: Obj) => any) => {
-    return async (parent: any, args: DTO<Obj>, context: ContextService, info: Obj) => {
+const createServiceGraphQL = (callback: (parent: any, args: DTO<Obj>, context: ContextService, info: GraphQLResolveInfo) => any) => {
+    return async (parent: any, args: DTO<Obj>, context: ContextService, info: GraphQLResolveInfo) => {
         if (!decentralization[context.path as PathGraphQL].active) throw new GraphQLError('Inactive action!');
         if (context.path !== info.path?.key) {
             throw new GraphQLError('Path is not match!');
@@ -58,11 +58,24 @@ const duplicateData = (error: any) => {
     }
 }
 export type CreateServiceGraplQL = ReturnType<typeof createServiceGraphQL>;
+const getFieldsQuery = (info: GraphQLResolveInfo): string[] => {
+    const getSelections = (selectionNode?: SelectionSetNode[]) => {
+        return selectionNode?.reduce((fields: string[], field: any) => {
+            if (field.selectionSet) {
+                return fields.concat(field.name.value, ...getSelections(field.selectionSet.selections));
+            }
+            return fields.concat(field.name.value);
+        }, [] as string[]);
+    };
+
+    return getSelections(info.fieldNodes[0].selectionSet?.selections as unknown as SelectionSetNode[]);
+};
 export {
     token,
     getScopeQuery,
     generateUniqueNumericId,
     createServiceGraphQL,
     checktIsTypeAction,
-    duplicateData
+    duplicateData,
+    getFieldsQuery
 }
