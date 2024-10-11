@@ -4,7 +4,9 @@ export const DbCollections = {
     Accounts: 'accounts',
     Users: 'users',
     Students: 'students',
-    SchoolYears: 'schoolyears'
+    SchoolYears: 'schoolyears',
+    GradeLevel: 'gradelevels',
+    Classses: 'classes'
 }
 
 export enum Role {
@@ -23,7 +25,11 @@ export enum PathGraphQL {
     students = 'students',
     createStudent = 'createStudent',
     schoolYears = 'schoolYears',
-    createSchoolYear = 'createSchoolYear'
+    createSchoolYear = 'createSchoolYear',
+    gradeLevels = 'gradeLevels',
+    createGradeLevel = 'createGradeLevel',
+    classes = 'classes',
+    createListClass = 'createListClass'
 }
 
 export const decentralization: PathDecentralization = {
@@ -93,6 +99,38 @@ export const decentralization: PathDecentralization = {
         }
     },
     createSchoolYear: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All']
+        }
+    },
+    gradeLevels: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All'],
+            STUDENT: ['Read'],
+            TEACHER: ['Read']
+        }
+    },
+    createGradeLevel: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All']
+        }
+    },
+    classes: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All'],
+            STUDENT: ["Read"],
+            TEACHER: ['Read']
+        }
+    },
+    createListClass: {
         active: true,
         requiredAuth: true,
         rolePermissions: {

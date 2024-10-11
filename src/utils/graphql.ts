@@ -4,6 +4,8 @@ import AccountModule from "@/graphql/accounts";
 import StudentModule from "@/graphql/students";
 import UserModule from "@/graphql/users";
 import SchoolYearModule from "@/graphql/schoolYears";
+import GradeLevelModule from "@/graphql/gradeLevels";
+import ClassModule from "@/graphql/classes";
 
 const CreateApollo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
     const init: Obj = {
@@ -52,5 +54,5 @@ const CreateApollo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
     return apolloOptions;
 }
 
-const InitApollo = CreateApollo(AccountModule, UserModule, StudentModule, SchoolYearModule);
+const InitApollo = CreateApollo(AccountModule, UserModule, StudentModule, SchoolYearModule, GradeLevelModule, ClassModule);
 export default InitApollo;
