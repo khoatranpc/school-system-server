@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { PathGraphQL, Role } from "@/config";
 import AccountModel from "@/models/account";
 import { DTO, Service } from "@/config/interface";
-import { createServiceGraphQL, duplicateData, getFieldsQuery, getPaginatedData } from "@/utils";
+import { createServiceGraphQL, duplicateData, generateUniqueNumericId, getFieldsQuery, getPaginatedData } from "@/utils";
 import { CreateTeacherInput, TeachersFilterInput } from "./type";
 import { GraphQLError } from "graphql";
 import UserModel from '@/models/user';
@@ -49,7 +49,8 @@ const teacherService: Service = {
                 const createdTeacher = await TeacherModel.create({
                     degrees: args.payload.degrees,
                     userId,
-                    teacherPositionsId: args.payload.teacherPositionsId
+                    teacherPositionsId: args.payload.teacherPositionsId,
+                    code: generateUniqueNumericId()
                 });
                 await session.commitTransaction();
                 session.endSession();
