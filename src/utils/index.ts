@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { decentralization, PathGraphQL, Role } from '@/config';
 import { Action, ContextService, DTO, FormatNameSchoolYear, Obj } from '@/config/interface';
+import mongoose from 'mongoose';
 
 const token = {
     generateToken: (payload: { email: string, accountId: string, phoneNumber: string, role: Role }) => {
@@ -73,6 +74,31 @@ const getFieldsQuery = (info: GraphQLResolveInfo): string[] => {
 function isFormatNameSchoolYear(value: string): value is FormatNameSchoolYear {
     return /^\d{4,}-\d{4,}$/.test(value);
 }
+async function getPaginatedData(Model: mongoose.Model<any>, page = 1, limit = 10, query = {}, populate?: any, select?: string[], sortBy?: any) {
+    try {
+        const skip = (page - 1) * limit;
+        const count = await Model.countDocuments(query);
+        const data = await Model.find(query, select ?? '')
+            .sort(sortBy ?? {
+                createdAt: -1
+            })
+            .skip(skip)
+            .limit(limit)
+            .populate(populate ?? '', select ?? '')
+            .exec();
+        const totalPage = Math.ceil(count / limit);
+
+        return {
+            page,
+            totalPage,
+            count,
+            data,
+            limit
+        };
+    } catch (error) {
+        throw new GraphQLError(error.message);
+    }
+}
 export {
     token,
     getScopeQuery,
@@ -81,5 +107,6 @@ export {
     checktIsTypeAction,
     duplicateData,
     getFieldsQuery,
-    isFormatNameSchoolYear
+    isFormatNameSchoolYear,
+    getPaginatedData
 }

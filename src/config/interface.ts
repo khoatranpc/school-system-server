@@ -45,3 +45,15 @@ export type PathDecentralization = {
 };
 
 export type FormatNameSchoolYear = `${number}-${number}`;
+
+export enum Degree {
+    HighSchool = "HighSchool",
+    Associate = "Associate",
+    Bachelor = "Bachelor",
+    Master = "Master",
+    Doctorate = "Doctorate",
+    PostDoctorate = "PostDoctorate",
+    Professor = "Professor",
+    Engineer = "Engineer",
+    Other = "Other"
+}

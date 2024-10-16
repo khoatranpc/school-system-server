@@ -6,10 +6,17 @@ import UserModule from "@/graphql/users";
 import SchoolYearModule from "@/graphql/schoolYears";
 import GradeLevelModule from "@/graphql/gradeLevels";
 import ClassModule from "@/graphql/classes";
+import TeacherPositionModule from "@/graphql/teacherPositions";
+import TeacherModule from "@/graphql/teachers";
 
 const CreateApollo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
     const init: Obj = {
-        types: '',
+        types: `#graphql
+            input PaginationInput {
+                page: Int 
+                limit: Int
+            }
+        `,
         queries: '',
         mutations: '',
         resolvers: {
@@ -54,5 +61,5 @@ const CreateApollo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
     return apolloOptions;
 }
 
-const InitApollo = CreateApollo(AccountModule, UserModule, StudentModule, SchoolYearModule, GradeLevelModule, ClassModule);
+const InitApollo = CreateApollo(AccountModule, UserModule, StudentModule, SchoolYearModule, GradeLevelModule, ClassModule, TeacherPositionModule, TeacherModule);
 export default InitApollo;
