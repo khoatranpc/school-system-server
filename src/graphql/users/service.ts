@@ -35,7 +35,6 @@ const userService: Service = {
                 accountId: getAccInfo.accountId
             });
             const crrUser = await UserModel.findOne(searchPipline);
-            console.log(crrUser);
             return crrUser;
         })
     }

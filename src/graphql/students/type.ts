@@ -14,3 +14,21 @@ export interface StudentInput extends Student, UserInput, AccountInput {
     identity?: string;
     dob?: Date;
 }
+
+export interface StudentsFitlerInput {
+    filter: {
+        name: string;
+        phoneNumber: string;
+        email: string;
+        identity: string;
+
+        // classId, schoolYearId
+        classId?: string;
+        schoolYearId?: string;
+        isNotInThisClassId?: boolean;
+    },
+    pagination: {
+        page: number;
+        limit: number;
+    }
+}

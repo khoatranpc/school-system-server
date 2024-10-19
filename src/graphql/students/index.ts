@@ -6,9 +6,6 @@ const StudentModule: GraphQLModule = {
     mutation: `#graphql
         ${PathGraphQL.createStudent}(payload: StudentInput!): Student
     `,
-    query: `#graphql
-        ${PathGraphQL.students}: [Student]
-    `,
     type: `#graphql
         type Student {
             code: String
@@ -24,7 +21,32 @@ const StudentModule: GraphQLModule = {
             identity: String 
             dob: Float!
         }
+        input StudentFilter {
+            name: String
+            phoneNumber: String
+            email: String
+            identity: String
+
+            # filter 
+            classId: String
+            schoolYearId: String
+            isNotInThisClass: Boolean
+        }
+        input StudentsInput {
+            filter: StudentFilter
+            pagination: PaginationInput
+        }
+        type Students {
+            data: [Student]
+            limit: Int
+            page: Int
+            totalPage: Int
+            count: Int
+        }
     `,
+    query: `#graphql
+     ${PathGraphQL.students}(payload: StudentsInput): Students
+ `,
     resolvers: studentService
 }
 

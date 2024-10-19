@@ -19,7 +19,8 @@ const studentSchema = new mongoose.Schema<Student>({
     userId: {
         type: Types.ObjectId,
         ref: DbCollections.Users,
-        required: true
+        required: true,
+        unique: true
     },
 }, { timestamps: true });
 

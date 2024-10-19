@@ -1,47 +1,102 @@
-import StudentModel from "@/models/student";
+import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
+import { GraphQLError } from "graphql";
 import { PathGraphQL } from "@/config";
-import { DTO, Service } from "@/config/interface";
-import { createServiceGraphQL, duplicateData, generateUniqueNumericId, getFieldsQuery } from "@/utils";
-import { StudentInput } from "./type";
+import StudentModel from "@/models/student";
+import { DTO, Obj, Service } from "@/config/interface";
+import { createServiceGraphQL, duplicateData, generateUniqueNumericId, getFieldsQuery, getPaginatedData } from "@/utils";
+import { StudentInput, StudentsFitlerInput } from "./type";
 import UserModel from "@/models/user";
 import AccountModel from "@/models/account";
+import StudentClassModel from "@/models/studentClass";
+import ClassModel from "@/models/classes";
 
 const studentService: Service = {
     Query: {
-        [PathGraphQL.students]: createServiceGraphQL(async (_, __, ___, info) => {
-            const fields = getFieldsQuery(info);
-            const students = await StudentModel.find({}, fields.join(' ')).populate(`${fields.includes('userId') ? 'userId' : ''}`);
-            return students;
+        [PathGraphQL.students]: createServiceGraphQL(async (_, args: DTO<StudentsFitlerInput>, ___, info) => {
+            try {
+                const { classId, isNotInThisClass, schoolYearId } = args.payload?.filter as Obj ?? {};
+                let conditionalFilter = {};
+
+                if (classId && isNotInThisClass && schoolYearId) {
+                    const listClassInSchoolYearId = await ClassModel.find({
+                        schoolYearId: schoolYearId
+                    });
+                    const studentClasses = await StudentClassModel.find({
+                        classId: {
+                            $in: listClassInSchoolYearId.map(cl => cl._id)
+                        }
+                    });
+                    conditionalFilter = {
+                        '_id': {
+                            '$not': {
+                                '$in': studentClasses.map(st => st.studentId)
+                            }
+                        }
+                    }
+                }
+                const fields = getFieldsQuery(info);
+                const result = await getPaginatedData(StudentModel,
+                    args.payload?.pagination?.page,
+                    args.payload?.pagination?.limit,
+                    conditionalFilter,
+                    `${fields.includes('userId') ? 'userId' : ''}`,
+                    fields);
+                return result;
+            } catch (error) {
+                throw new GraphQLError(error.message);
+            }
         })
     },
     Mutation: {
         [PathGraphQL.createStudent]: createServiceGraphQL(async (_, args: DTO<StudentInput>) => {
+            const session = await mongoose.startSession();
+            session.startTransaction(); // Bắt đầu transaction
             const { address, email, name, phoneNumber, dob, identity } = args.payload;
-            const hashedPassword = bcrypt.hashSync(email, 10);
             try {
-                const createdAccount = await AccountModel.create({
+                const trimmedEmail = args.payload?.email?.trim();
+
+                const [existedAccount, existedUser] = await Promise.all([
+                    AccountModel.findOne({ email: trimmedEmail }),
+                    UserModel.findOne({ email: trimmedEmail })
+                ]);
+                const hashedPassword = bcrypt.hashSync(email, 10);
+                const accountId = existedAccount?._id ?? (await AccountModel.create({
                     email: email.trim(),
                     phoneNumber: phoneNumber.trim(),
                     password: hashedPassword,
-                });
-                const createdUserInfo = await UserModel.create({
-                    accountId: createdAccount._id,
+                }))._id;
+                if (existedUser?._id) {
+                    const checkExistedStudent = await StudentModel.findOne({
+                        userId: existedUser._id
+                    });
+                    if (checkExistedStudent) throw new GraphQLError('This student already exist!')
+                }
+                const userId = existedUser?._id ?? (await UserModel.create({
+                    accountId: accountId,
                     address: address?.trim(),
                     dob,
                     email: email?.trim(),
                     identity: identity?.trim(),
                     name: name?.trim(),
                     phoneNumber: phoneNumber?.trim(),
-                });
+                }))._id;
+
                 const randomNumber = generateUniqueNumericId();
                 const createdStudent = await StudentModel.create({
                     code: randomNumber,
-                    userId: createdUserInfo._id
+                    userId: userId
                 });
+                await session.commitTransaction();
+                session.endSession();
                 return createdStudent;
             } catch (error) {
+                if (session.inTransaction()) {
+                    await session.abortTransaction();
+                }
+                session.endSession();
                 duplicateData(error);
+                throw new GraphQLError(error.message);
             }
         })
     }

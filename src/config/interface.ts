@@ -57,3 +57,16 @@ export enum Degree {
     Engineer = "Engineer",
     Other = "Other"
 }
+
+export enum TypeStudentInClass {
+    Promoted = 'Promoted',
+    Demoted = 'Demoted',
+    Transfered = 'Transfered',
+    Completed = 'Completed',
+    Pending = 'Pending'
+}
+
+export interface Pagination {
+    limit: number;
+    page: number;
+}

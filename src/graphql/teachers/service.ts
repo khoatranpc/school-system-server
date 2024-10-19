@@ -15,6 +15,9 @@ const teacherService: Service = {
             const session = await mongoose.startSession();
             session.startTransaction(); // Bắt đầu transaction
             try {
+                if (!args.payload.email) throw new GraphQLError('Email is required!');
+                if (!args.payload.phoneNumber) throw new GraphQLError('Phone number is required!');
+
                 const trimmedEmail = args.payload.email.trim();
                 const trimmedPhoneNumber = args.payload.phoneNumber.trim();
 
@@ -22,8 +25,6 @@ const teacherService: Service = {
                     AccountModel.findOne({ email: trimmedEmail }),
                     UserModel.findOne({ email: trimmedEmail })
                 ]);
-                if (!args.payload.email) throw new GraphQLError('Email is required!');
-                if (!args.payload.phoneNumber) throw new GraphQLError('Phone number is required!');
                 const hashedPassword = bcrypt.hashSync(trimmedPhoneNumber as string, 10);
                 const accountId = existedAccount?._id || (await AccountModel.create({
                     email: trimmedEmail,
