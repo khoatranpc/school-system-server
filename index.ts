@@ -16,7 +16,7 @@ import { checktIsTypeAction } from '@/utils';
 
 const MONGODB_URL = process.env.MONGODB_URL as string;
 const PORT = Number(process.env.PORT) || 8000;
-console.log(process.env);
+console.log(process.env.MONGODB_URL);
 await mongoose.connect(MONGODB_URL);
 const app = express();
 app.use(cors());
