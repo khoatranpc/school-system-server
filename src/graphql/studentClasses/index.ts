@@ -22,6 +22,9 @@ const StudentClassModule: GraphQLModule = {
             count: Int
             totalPage: Int
         }
+        type InsertedStudentsIntoClass {
+            studentId: [String]
+        }
         input StudentClassesFilter {
             classId: String
         }
@@ -29,8 +32,14 @@ const StudentClassModule: GraphQLModule = {
             pagination: PaginationInput
             filter: StudentClassesFilter
         }
+        input AddStudentsToClassInput {
+            classId: String!
+            studentIds: [String!]!
+        }
     `,
-    mutation: ``,
+    mutation: `#graphql
+        ${PathGraphQL.addStudentsIntoClass}(payload: AddStudentsToClassInput!): InsertedStudentsIntoClass
+    `,
     query: `#graphql
         ${PathGraphQL.studentClasses}(payload: StudentClassesFilterInput): StudentClasses
     `,

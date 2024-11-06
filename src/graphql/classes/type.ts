@@ -22,3 +22,7 @@ export interface ClassFilterInput {
 export interface CreateListClass {
     classes: Class[];
 }
+
+export interface DetailClassInput {
+    classId: string;
+}

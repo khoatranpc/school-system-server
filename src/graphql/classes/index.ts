@@ -28,7 +28,7 @@ const ClassModule: GraphQLModule = {
             limit: Int
             page: Int
         }
-        input ClassInput {
+        input CreateClassInput {
             _id: String
             gradeLevelId: String!
             name: String!
@@ -37,11 +37,15 @@ const ClassModule: GraphQLModule = {
             isActive: Boolean
         }
         input CreateListClassInput {
-            classes: [ClassInput]!
+            classes: [CreateClassInput]!
+        }
+        input DetailClassInput {
+            classId: String!
         }
     `,
     query: `#graphql
         ${PathGraphQL.classes}(payload: ClassFilterInput): ClassFilter
+        ${PathGraphQL.detailClass}(payload: DetailClassInput!): Class
     `,
     mutation: `#graphql
          ${PathGraphQL.createListClass}(payload: CreateListClassInput!): [Class]

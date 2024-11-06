@@ -2,7 +2,7 @@ import { PathGraphQL } from "@/config";
 import { DTO, Obj, Service } from "@/config/interface";
 import { GraphQLError } from "graphql";
 import { createServiceGraphQL, getFieldsQuery } from "@/utils";
-import { ClassFilterInput, CreateListClass } from "./type";
+import { ClassFilterInput, CreateListClass, DetailClassInput } from "./type";
 import ClassModel from "@/models/classes";
 
 const classService: Service = {
@@ -61,6 +61,16 @@ const classService: Service = {
                 totalPage,
                 count: totalClass
             };
+        }),
+        [PathGraphQL.detailClass]: createServiceGraphQL(async (_, args: DTO<DetailClassInput>, __, info) => {
+            try {
+                const id = args.payload.classId as string;
+                const fields = getFieldsQuery(info);
+                const currentClass = await ClassModel.findById(id, fields.join(' ')).populate(`schoolYearId gradeLevelId`, fields.join(' '));
+                return currentClass;
+            } catch (error) {
+                throw new GraphQLError(error.message);
+            }
         })
     }
 }

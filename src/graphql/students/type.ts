@@ -25,7 +25,8 @@ export interface StudentsFitlerInput {
         // classId, schoolYearId
         classId?: string;
         schoolYearId?: string;
-        isNotInThisClassId?: boolean;
+        gradeLevelId?: string;
+        isNotInThisClass?: boolean;
     },
     pagination: {
         page: number;

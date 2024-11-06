@@ -6,3 +6,8 @@ export interface StudentClassesFilterInput {
         classId: string;
     }
 }
+
+export interface AddStudentsToClassInput {
+    classId: string;
+    studentIds: string[];
+}

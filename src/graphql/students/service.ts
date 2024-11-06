@@ -15,17 +15,18 @@ const studentService: Service = {
     Query: {
         [PathGraphQL.students]: createServiceGraphQL(async (_, args: DTO<StudentsFitlerInput>, ___, info) => {
             try {
-                const { classId, isNotInThisClass, schoolYearId } = args.payload?.filter as Obj ?? {};
+                const { classId, isNotInThisClass, schoolYearId, gradeLevelId } = args.payload?.filter ?? {};
                 let conditionalFilter = {};
 
-                if (classId && isNotInThisClass && schoolYearId) {
+                if (classId && isNotInThisClass && schoolYearId && gradeLevelId) {
                     const listClassInSchoolYearId = await ClassModel.find({
-                        schoolYearId: schoolYearId
+                        schoolYearId: schoolYearId,
+                        gradeLevelId: gradeLevelId
                     });
                     const studentClasses = await StudentClassModel.find({
                         classId: {
                             $in: listClassInSchoolYearId.map(cl => cl._id)
-                        }
+                        },
                     });
                     conditionalFilter = {
                         '_id': {

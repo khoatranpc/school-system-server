@@ -8,6 +8,7 @@ const StudentModule: GraphQLModule = {
     `,
     type: `#graphql
         type Student {
+            _id: ID
             code: String
             isActive: Boolean
             isDeleted: Boolean
@@ -30,6 +31,7 @@ const StudentModule: GraphQLModule = {
             # filter 
             classId: String
             schoolYearId: String
+            gradeLevelId: String
             isNotInThisClass: Boolean
         }
         input StudentsInput {
