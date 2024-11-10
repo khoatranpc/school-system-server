@@ -17,6 +17,7 @@ const UserModule: GraphQLModule = {
             role: String
             createdAt: Float
             updatedAt: Float
+            gender: String
         }
         input UserInput {
             name: String
@@ -25,6 +26,7 @@ const UserModule: GraphQLModule = {
             dob: Float
             isDeleted: Boolean
             role: String
+            gender: String
         }
         input GetUser {
             searchValue: String

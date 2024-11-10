@@ -70,3 +70,9 @@ export interface Pagination {
     limit: number;
     page: number;
 }
+
+export enum Gender {
+    Male = 'Male',
+    Female = 'Female',
+    Other = 'Other'
+}
