@@ -1,5 +1,6 @@
 import mongoose, { Types } from "mongoose";
 import { DbCollections, Role } from "@/config";
+import { Gender } from "@/config/interface";
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -31,6 +32,11 @@ const userSchema = new mongoose.Schema({
     accountId: {
         type: Types.ObjectId,
         ref: DbCollections.Users
+    },
+    gender: {
+        type: String,
+        enum: Gender,
+        default: Gender.Other
     }
 }, { timestamps: true });
 

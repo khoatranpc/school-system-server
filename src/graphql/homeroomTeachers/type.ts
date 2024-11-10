@@ -9,7 +9,7 @@ export interface HomeroomTeacher extends Obj {
 }
 
 export interface FilterHomeroomTeacher {
-    searchValue: string;
+    searchValue?: string;
     classId: string;
     schoolYearId: string;
 }
