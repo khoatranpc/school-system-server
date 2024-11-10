@@ -1,7 +1,7 @@
 import { GraphQLError } from "graphql";
 import { PathGraphQL } from "@/config";
 import { DTO, Service } from "@/config/interface";
-import { createServiceGraphQL } from "@/utils";
+import { createServiceGraphQL, getPaginatedData } from "@/utils";
 import { FindHomeRoomTeacher, SaveHomeRoomTeacher } from "./type";
 import HomeroomTeacherModel from "@/models/homeroomTeacher";
 
@@ -33,8 +33,28 @@ const HomeRoomTeacherService: Service = {
     Query: {
         [PathGraphQL.homeroomTeachers]: createServiceGraphQL(async (_, args: DTO<FindHomeRoomTeacher>) => {
             try {
-                const { filter: { classId, schoolYearId, searchValue }, pagination } = args.payload;
-
+                const { filter: { classId, schoolYearId }, pagination } = args.payload;
+                const results = await getPaginatedData(
+                    HomeroomTeacherModel,
+                    pagination?.page,
+                    pagination?.limit,
+                    {
+                        classId,
+                        schoolYearId
+                    },
+                    [
+                        {
+                            path: 'schoolYearId'
+                        },
+                        {
+                            path: 'teacherId',
+                            populate: {
+                                path: 'userId'
+                            }
+                        }
+                    ],
+                );
+                return results;
             } catch (error) {
                 throw new GraphQLError(error.message);
             }

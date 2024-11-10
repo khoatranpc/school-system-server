@@ -10,6 +10,7 @@ export interface User {
     isDeleted?: boolean;
     accountId?: string;
     role?: Role;
+    gender?: string;
 }
 export interface UserInput {
     name?: string;
@@ -18,6 +19,7 @@ export interface UserInput {
     role?: Role;
     identity?: string;
     dob?: Date;
+    gender?: string;
 }
 
 export interface GetOneUser {
