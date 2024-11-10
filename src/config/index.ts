@@ -41,7 +41,8 @@ export enum PathGraphQL {
     studentClasses = 'studentClasses',
     detailClass = 'detailClass',
     addStudentsIntoClass = 'addStudentsIntoClass',
-    homeroomTeachers = 'homeroomTeachers'
+    homeroomTeachers = 'homeroomTeachers',
+    savehomeroomteacher = 'savehomeroomteacher'
 }
 
 export const decentralization: PathDecentralization = {
@@ -199,6 +200,13 @@ export const decentralization: PathDecentralization = {
         }
     },
     homeroomTeachers: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All']
+        }
+    },
+    savehomeroomteacher: {
         active: true,
         requiredAuth: true,
         rolePermissions: {

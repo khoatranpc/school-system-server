@@ -6,7 +6,7 @@ const HomeroomTeacherModule: GraphQLModule = {
     type: `#graphql
         type HomeroomTeacher {
             classId: Class
-            schoolYear: SchoolYear
+            schoolYearId: SchoolYear
             teacherId: Teacher
             isActive: Boolean
             isDeleted: Boolean
@@ -29,8 +29,17 @@ const HomeroomTeacherModule: GraphQLModule = {
             totalPage: Int
             count: Int
         }
+        input SaveHomeRoomTeacher {
+            teacherId: String
+            classId: String
+            schoolYearId: String
+            isActive: Boolean
+            isDeleted: Boolean
+        }
     `,
-    mutation: ``,
+    mutation: `#graphql
+        ${PathGraphQL.savehomeroomteacher}(payload: SaveHomeRoomTeacher!): HomeroomTeacher
+    `,
     query: `#graphql
         ${PathGraphQL.homeroomTeachers}(payload: FindHomeRoomTeacher!): FoundHomeRoomTeacher
     `,
