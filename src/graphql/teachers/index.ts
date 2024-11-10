@@ -49,6 +49,8 @@ const TeacherModule: GraphQLModule = {
             count: Int
         }
         input TeacherFilter {
+            searchValue: String
+
             code: String
             startDate: Float
             teacherPositionsId: [String]

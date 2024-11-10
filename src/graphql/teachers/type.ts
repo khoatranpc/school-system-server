@@ -30,6 +30,8 @@ export interface CreateTeacherInput {
 
 export interface TeachersFilterInput {
     filter: {
+        searchValue?: string;
+
         code: string;
         startDate: number;
         teacherPositionsId: string[];

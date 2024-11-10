@@ -9,6 +9,7 @@ import ClassModule from "@/graphql/classes";
 import TeacherPositionModule from "@/graphql/teacherPositions";
 import TeacherModule from "@/graphql/teachers";
 import StudentClassModule from "@/graphql/studentClasses";
+import HomeroomTeacherModule from "@/graphql/homeroomTeachers";
 
 const CreateApollo = (...module: GraphQLModule[]): ApolloServerOptions<{}> => {
     const init: Obj = {
@@ -70,6 +71,7 @@ const InitApollo = CreateApollo(AccountModule,
     ClassModule,
     TeacherPositionModule,
     TeacherModule,
-    StudentClassModule
+    StudentClassModule,
+    HomeroomTeacherModule
 );
 export default InitApollo;

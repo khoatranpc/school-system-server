@@ -70,10 +70,44 @@ const teacherService: Service = {
         [PathGraphQL.teachers]: createServiceGraphQL(async (_, args: DTO<TeachersFilterInput>, __, info) => {
             try {
                 const fields = getFieldsQuery(info);
+                let userIds: any[] = [];
+                if (args.payload.filter?.searchValue) {
+                    const users = await UserModel.find({
+                        '$or': [
+                            {
+                                email: {
+                                    '$regex': args.payload?.filter?.searchValue?.toLowerCase(),
+                                    '$options': 'i'
+                                }
+                            },
+                            {
+                                name: {
+                                    '$regex': args.payload?.filter?.searchValue?.toLowerCase(),
+                                    '$options': 'i'
+                                }
+                            },
+                            {
+                                phoneNumber: {
+                                    '$regex': args.payload?.filter?.searchValue?.toLowerCase(),
+                                    '$options': 'i'
+                                }
+                            },
+                        ]
+                    });
+                    userIds.push(...users.map((user) => user._id));
+                }
+                delete args.payload?.filter?.searchValue;
                 const results = await getPaginatedData(TeacherModel,
                     args.payload?.pagination?.page,
                     args.payload?.pagination?.limit,
-                    args.payload?.filter,
+                    {
+                        ...args.payload?.filter,
+                        ...userIds.length ? {
+                            userId: {
+                                '$in': userIds
+                            }
+                        } : {}
+                    },
                     'userId teacherPositionsId',
                     fields
                 );

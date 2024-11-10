@@ -46,9 +46,11 @@ const studentClassesService: Service = {
                 const fields = getFieldsQuery(info);
                 const result = await getPaginatedData(
                     StudentClassModel,
-                    undefined,
-                    undefined,
-                    undefined,
+                    args.payload.pagination?.page,
+                    args.payload.pagination?.limit,
+                    {
+                        classId: args.payload.filter?.classId
+                    },
                     [
                         {
                             path: 'studentId',
