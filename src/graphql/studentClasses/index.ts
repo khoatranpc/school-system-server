@@ -23,7 +23,7 @@ const StudentClassModule: GraphQLModule = {
             totalPage: Int
         }
         type InsertedStudentsIntoClass {
-            studentId: [String]
+            studentIds: [String]
         }
         input StudentClassesFilter {
             classId: String
