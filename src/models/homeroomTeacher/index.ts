@@ -5,7 +5,7 @@ import { HomeroomTeacher } from "@/graphql/homeroomTeachers/type";
 const schema = new mongoose.Schema<HomeroomTeacher>({
     classId: {
         type: SchemaTypes.ObjectId,
-        ref: DbCollections.Classses,
+        ref: DbCollections.Classes,
         required: true
     },
     schoolYearId: {

@@ -2,7 +2,7 @@ import { GraphQLError } from "graphql";
 import { PathGraphQL } from "@/config";
 import { DTO, Service } from "@/config/interface";
 import { createServiceGraphQL, getFieldsQuery, getPaginatedData } from "@/utils";
-import { AddStudentsToClassInput, StudentClassesFilterInput } from "./type";
+import { AddStudentsToClassInput, CountStudentInClass, StudentClassesFilterInput } from "./type";
 import StudentClassModel from "@/models/studentClass";
 import ClassModel from "@/models/classes";
 
@@ -63,6 +63,23 @@ const studentClassesService: Service = {
                         }
                     ],
                     fields
+                );
+                return result;
+            } catch (error) {
+                throw new GraphQLError(error.message);
+            }
+        }),
+        [PathGraphQL.countStudentInClass]: createServiceGraphQL(async (_, args: DTO<CountStudentInClass>) => {
+            try {
+                const { classIds } = args.payload;
+                const result = await Promise.all(
+                    classIds.map(async (classId) => {
+                        const count = await StudentClassModel.countDocuments({
+                            classId: classId,
+                            isDeleted: false
+                        });
+                        return { classId, count };
+                    })
                 );
                 return result;
             } catch (error) {

@@ -6,7 +6,7 @@ export const DbCollections = {
     Students: 'students',
     SchoolYears: 'schoolyears',
     GradeLevel: 'gradelevels',
-    Classses: 'classes',
+    Classes: 'classes',
     TeacherPositions: 'teacherpositions',
     Teachers: 'teachers',
     StudentClasses: 'studentclasses',
@@ -42,7 +42,8 @@ export enum PathGraphQL {
     detailClass = 'detailClass',
     addStudentsIntoClass = 'addStudentsIntoClass',
     homeroomTeachers = 'homeroomTeachers',
-    savehomeroomteacher = 'savehomeroomteacher'
+    savehomeroomteacher = 'savehomeroomteacher',
+    countStudentInClass = 'countStudentInClass'
 }
 
 export const decentralization: PathDecentralization = {
@@ -207,6 +208,13 @@ export const decentralization: PathDecentralization = {
         }
     },
     savehomeroomteacher: {
+        active: true,
+        requiredAuth: true,
+        rolePermissions: {
+            ADMIN: ['All']
+        }
+    },
+    countStudentInClass: {
         active: true,
         requiredAuth: true,
         rolePermissions: {

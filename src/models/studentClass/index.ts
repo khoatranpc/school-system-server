@@ -15,7 +15,7 @@ export interface StudentClass {
 const studentClassSchema = new mongoose.Schema<StudentClass>({
     classId: {
         type: SchemaTypes.ObjectId,
-        ref: DbCollections.Classses,
+        ref: DbCollections.Classes,
         required: true
     },
     studentId: {

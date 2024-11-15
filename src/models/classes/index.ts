@@ -28,6 +28,6 @@ const classSchema = new mongoose.Schema<Class>({
 }, { timestamps: true });
 
 
-const ClassModel = mongoose.model(DbCollections.Classses, classSchema);
+const ClassModel = mongoose.model(DbCollections.Classes, classSchema);
 
 export default ClassModel;

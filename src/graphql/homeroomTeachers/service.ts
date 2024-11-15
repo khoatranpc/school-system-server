@@ -33,14 +33,28 @@ const HomeRoomTeacherService: Service = {
     Query: {
         [PathGraphQL.homeroomTeachers]: createServiceGraphQL(async (_, args: DTO<FindHomeRoomTeacher>) => {
             try {
-                const { filter: { classId, schoolYearId }, pagination } = args.payload;
+                const { filter: { classId, schoolYearId, classIds, schoolYearIds, isActive, isDeleted }, pagination } = args.payload;
                 const results = await getPaginatedData(
                     HomeroomTeacherModel,
                     pagination?.page,
                     pagination?.limit,
                     {
-                        classId,
-                        schoolYearId
+                        classId: {
+                            ...classIds ? {
+                                '$in': classIds
+                            } : {
+                                '$eq': classId
+                            }
+                        },
+                        schoolYearId: {
+                            ...schoolYearIds ? {
+                                '$in': schoolYearIds
+                            } : {
+                                '$eq': schoolYearId
+                            }
+                        },
+                        ...isActive !== undefined ? { isActive } : {},
+                        ...isDeleted !== undefined ? { isDeleted } : {},
                     },
                     [
                         {
@@ -51,6 +65,9 @@ const HomeRoomTeacherService: Service = {
                             populate: {
                                 path: 'userId'
                             }
+                        },
+                        {
+                            path: 'classId'
                         }
                     ],
                 );

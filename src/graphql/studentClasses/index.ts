@@ -25,8 +25,15 @@ const StudentClassModule: GraphQLModule = {
         type InsertedStudentsIntoClass {
             studentIds: [String]
         }
+        type CountStudentInClass {
+            classId: ID
+            count: Int
+        }
         input StudentClassesFilter {
             classId: String
+        }
+        input CountStudentInClassInput {
+            classIds: [String]
         }
         input StudentClassesFilterInput {
             pagination: PaginationInput
@@ -42,6 +49,7 @@ const StudentClassModule: GraphQLModule = {
     `,
     query: `#graphql
         ${PathGraphQL.studentClasses}(payload: StudentClassesFilterInput): StudentClasses
+        ${PathGraphQL.countStudentInClass}(payload: CountStudentInClassInput!): [CountStudentInClass]
     `,
     resolvers: studentClassesService
 };
