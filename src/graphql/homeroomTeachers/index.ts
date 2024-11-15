@@ -5,6 +5,7 @@ import { PathGraphQL } from "@/config";
 const HomeroomTeacherModule: GraphQLModule = {
     type: `#graphql
         type HomeroomTeacher {
+            _id: ID
             classId: Class
             schoolYearId: SchoolYear
             teacherId: Teacher
