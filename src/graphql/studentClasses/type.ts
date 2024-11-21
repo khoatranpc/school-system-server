@@ -11,3 +11,7 @@ export interface AddStudentsToClassInput {
     classId: string;
     studentIds: string[];
 }
+
+export interface CountStudentInClass {
+    classIds: string[];
+}

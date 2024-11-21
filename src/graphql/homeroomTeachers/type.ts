@@ -11,7 +11,11 @@ export interface HomeroomTeacher extends Obj {
 export interface FilterHomeroomTeacher {
     searchValue?: string;
     classId: string;
+    classIds?: string[];
+    schoolYearIds?: string[];
     schoolYearId: string;
+    isActive: boolean,
+    isDeleted: boolean
 }
 
 export interface FindHomeRoomTeacher {

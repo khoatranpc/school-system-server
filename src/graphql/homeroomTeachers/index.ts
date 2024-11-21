@@ -18,6 +18,10 @@ const HomeroomTeacherModule: GraphQLModule = {
             searchValue: String
             classId: String
             schoolYearId: String
+            classIds: [String]
+            schoolYearIds: [String]
+            isActive: Boolean
+            isDeleted: Boolean
         }
         input FindHomeRoomTeacher {
             filter: FilterHomeRoomTeacher
